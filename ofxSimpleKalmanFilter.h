@@ -16,13 +16,14 @@
 
 template<class Type>
 class ofxBasicSimpleKalmanFilter
-{    
-public:    
-    void setup(const Type &P,
-               const Type &X,
-               const Type &K,
-               double Q = 1e-4,
-               double R = 1e-2)
+{
+public:
+    ofxBasicSimpleKalmanFilter()
+    :
+    mQ(1e-4), mR(1e-2)
+    {}
+    
+    void setup(const Type &P, const Type &X, const Type &K, double Q, double R)
     {
         mQ = Q;
         mR = R;
@@ -31,13 +32,13 @@ public:
         mK = K;
     }
     
-	Type update(Type measurement)
-	{
-		measurementUpdate();
-		mResult = mX + (measurement - mX) * mK;
-		mX = mResult;
-		return mResult;
-	}
+    Type update(Type measurement)
+    {
+        measurementUpdate();
+        mResult = mX + (measurement - mX) * mK;
+        mX = mResult;
+        return mResult;
+    }
     
     Type getResult() const
     {
@@ -45,11 +46,11 @@ public:
     }
     
 private:
-	void measurementUpdate()
-	{
-		mK = (mP + mQ) / (mP + mQ + mR);
-		mP = mR * (mP + mQ) / (mR + mP + mQ);
-	}
+    void measurementUpdate()
+    {
+        mK = (mP + mQ) / (mP + mQ + mR);
+        mP = mR * (mP + mQ) / (mR + mP + mQ);
+    }
     
     Type mResult;
     Type mP, mX, mK;
